@@ -1,0 +1,17 @@
+version: '2.4'
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8000:80"
+    volumes:
+      - ./docker/hosts:/etc/nginx/conf.d
+      - ./project:/var/www
+    links:
+      - php
+  php:
+    build:
+      context: .
+      dockerfile: docker/fpm-docker
+    volumes:
+      - ./project:/var/www
