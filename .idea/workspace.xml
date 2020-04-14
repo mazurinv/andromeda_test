@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4672e05d-eff2-4008-b276-42885e97ec81" name="Default Changelist" comment="">
+    <list default="true" id="4672e05d-eff2-4008-b276-42885e97ec81" name="Default Changelist" comment="symfony initialised with docker">
       <change afterPath="$PROJECT_DIR$/project/andromeda/.env" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/project/andromeda/bin/console" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/project/andromeda/composer.json" afterDir="false" />
@@ -1477,14 +1477,27 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1586854211735</updated>
-      <workItem from="1586854213017" duration="6935000" />
+      <workItem from="1586854213017" duration="7106000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="symfony initialised with docker" />
     <option name="LAST_COMMIT_MESSAGE" value="symfony initialised with docker" />
   </component>
@@ -1493,9 +1506,9 @@
       <screen x="0" y="27" width="1920" height="1010" />
     </state>
     <state x="645" y="249" width="619" height="564" key="#docker-compose.yml.php:_Compose_Deployment/0.27.1920.1010@0.27.1920.1010" timestamp="1586856455281" />
-    <state x="525" y="127" width="860" height="807" key="CommitChangelistDialog2" timestamp="1586874205895">
+    <state x="525" y="127" width="860" height="807" key="CommitChangelistDialog2" timestamp="1586874325913">
       <screen x="0" y="27" width="1920" height="1010" />
     </state>
-    <state x="525" y="127" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1010@0.27.1920.1010" timestamp="1586874205895" />
+    <state x="525" y="127" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1010@0.27.1920.1010" timestamp="1586874325913" />
   </component>
 </project>
