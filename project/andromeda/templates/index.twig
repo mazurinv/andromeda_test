@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div>
+        <h4>Tags</h4>
+        <form action="/tag" method="post">
+            <input type="text" name="name">
+            <input type="submit" value="add tag">
+        </form>
+        <h5>List of tags</h5>
+        {% for tag in tags %}
+            <form action="/tag" method="post">
+                {{ tag.id }}:
+                <input type="hidden" name="id" value="{{ tag.id }}">
+                <input type="text" name="name" value="{{ tag.name }}">
+                <input type="submit" value="edit">
+            </form>
+        {% endfor %}
+    </div>
+{% endblock %}
