@@ -1,4 +1,19 @@
-## Prerequisites
+## Task
+You need to develop API service:
+
+There are two entities - articles (id, title) and tags (id, name).
+Tags can be bounded to articles (many to many).
+
+API methods:
+- create/edit tag
+- create/edit article with tags bounded. Query must return article
+- remove article
+- get list of articles with filtering by tags. If query has more than one tag, API should return only articles having all tags from query
+- get article by id
+
+The response must be in JSON.
+
+## Prerequisites for project running
 Having Docker is a must.
 
 ## Running project
