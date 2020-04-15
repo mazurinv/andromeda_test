@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ManyToMany;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TagRepository")
@@ -20,6 +21,12 @@ class Tag
      * @ORM\Column(type="string", length=255)
      */
     public $name;
+
+    /**
+     * Many Tags have Many Articles.
+     * @ManyToMany(targetEntity="Article", mappedBy="tags")
+     */
+    public $articles;
 
     public function getId(): ?int
     {

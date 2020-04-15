@@ -1,20 +1,87 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div>
-        <h4>Tags</h4>
-        <form action="/tag" method="post">
-            <input type="text" name="name">
-            <input type="submit" value="add tag">
-        </form>
-        <h5>List of tags</h5>
-        {% for tag in tags %}
+    <div style="display: flex; flex-direction: row;">
+        <div>
+            <h4>Tags</h4>
             <form action="/tag" method="post">
-                {{ tag.id }}:
-                <input type="hidden" name="id" value="{{ tag.id }}">
-                <input type="text" name="name" value="{{ tag.name }}">
-                <input type="submit" value="edit">
+                <input type="text" name="name">
+                <input type="submit" value="add tag">
             </form>
-        {% endfor %}
+            <h5>List of tags</h5>
+            {% for tag in tags %}
+                <div style="display: flex; flex-direction: row;">
+                    <form action="/tag" method="post">
+                        {{ tag.id }}:
+                        <input type="hidden" name="id" value="{{ tag.id }}">
+                        <input type="text" name="name" value="{{ tag.name }}">
+                        <input type="submit" value="edit">
+                    </form>
+                    <form action="/tag/{{ tag.id }}" method="post">
+                        <input type="hidden" name="id" value="{{ tag.id }}">
+                        <input type="submit" value="X">
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div style="margin-left:20px;">
+            <h4>Articles</h4>
+            <form action="/article" method="post">
+                <input type="text" name="title">
+                <select name="tags[0]">
+                    <option value="0">-- select --</option>
+                    {% for tag in tags %}
+                        <option value="{{ tag.id }}">{{ tag.name }}</option>
+                    {% endfor %}
+                </select>
+                <select name="tags[0]">
+                    <option value="0">-- select --</option>
+                    {% for tag in tags %}
+                        <option value="{{ tag.id }}">{{ tag.name }}</option>
+                    {% endfor %}
+                </select>
+                <select name="tags[0]">
+                    <option value="0">-- select --</option>
+                    {% for tag in tags %}
+                        <option value="{{ tag.id }}">{{ tag.name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="add article">
+            </form>
+            <h5>List of articles</h5>
+            {% for article in articles %}
+                <div style="display: flex; flex-direction: row;">
+                    <form action="/article" method="post">
+                        {{ article.id }}:
+                        <input type="hidden" name="id" value="{{ article.id }}">
+                        <input type="text" name="title" value="{{ article.title }}">
+                        <select name="tags[0]">
+                            <option value="0">-- select --</option>
+                            {% for tag in tags %}
+                                <option value="{{ tag.id }}">{{ tag.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="tags[0]">
+                            <option value="0">-- select --</option>
+                            {% for tag in tags %}
+                                <option value="{{ tag.id }}">{{ tag.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="tags[0]">
+                            <option value="0">-- select --</option>
+                            {% for tag in tags %}
+                                <option value="{{ tag.id }}">{{ tag.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" value="edit">
+                    </form>
+                    <form action="/article/{{ article.id }}" method="post">
+                        <input type="hidden" name="id" value="{{ article.id }}">
+                        <input type="submit" value="X">
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

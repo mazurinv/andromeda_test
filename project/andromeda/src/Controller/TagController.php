@@ -39,7 +39,6 @@ class TagController extends AbstractController
     {
         $id = $request->get('id');
         $name = $request->get('name');
-
         $entityManager = $this->getDoctrine()->getManager();
 
         if (!empty($id)) {
@@ -55,6 +54,20 @@ class TagController extends AbstractController
         return $this->json([
             'status' => 'ok',
             'id' => $tag->getId()
+        ]);
+    }
+
+    /**
+     * @Route("/tag/{tag}", name="removeTag", methods={"POST"})
+     */
+    public function removeTag($tag, TagRepository $tagRepository)
+    {
+        $tagToRemove = $tagRepository->find($tag);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($tagToRemove);
+        $entityManager->flush();
+        return $this->json([
+            'status' => 'ok'
         ]);
     }
 }
