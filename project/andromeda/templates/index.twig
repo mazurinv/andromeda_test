@@ -35,13 +35,13 @@
                         <option value="{{ tag.id }}">{{ tag.name }}</option>
                     {% endfor %}
                 </select>
-                <select name="tags[0]">
+                <select name="tags[1]">
                     <option value="0">-- select --</option>
                     {% for tag in tags %}
                         <option value="{{ tag.id }}">{{ tag.name }}</option>
                     {% endfor %}
                 </select>
-                <select name="tags[0]">
+                <select name="tags[2]">
                     <option value="0">-- select --</option>
                     {% for tag in tags %}
                         <option value="{{ tag.id }}">{{ tag.name }}</option>
@@ -56,19 +56,19 @@
                         {{ article.id }}:
                         <input type="hidden" name="id" value="{{ article.id }}">
                         <input type="text" name="title" value="{{ article.title }}">
-                        <select name="tags[0]">
-                            <option value="0">-- select --</option>
-                            {% for tag in tags %}
-                                <option value="{{ tag.id }}">{{ tag.name }}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="tags[0]">
-                            <option value="0">-- select --</option>
-                            {% for tag in tags %}
-                                <option value="{{ tag.id }}">{{ tag.name }}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="tags[0]">
+                        {% set i = 0 %}
+                        {% for articleTag in article.tags %}
+                            <select name="tags[{{ i }}]">
+                                <option value="0">-- select --</option>
+                                {% for tag in tags %}
+                                    <option value="{{ tag.id }}" {% if articleTag.id == tag.id %}selected{% endif %}>
+                                        {{ tag.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% set i = i + 1 %}
+                        {% endfor %}
+                        <select name="tags[{{ i }}]">
                             <option value="0">-- select --</option>
                             {% for tag in tags %}
                                 <option value="{{ tag.id }}">{{ tag.name }}</option>

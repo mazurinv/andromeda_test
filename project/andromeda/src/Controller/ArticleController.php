@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
+use App\Repository\TagRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,36 +25,50 @@ class ArticleController extends AbstractController
     /**
      * @Route("/article/{id}", name="getArticle", methods={"GET"})
      */
-    public function getTag($id, ArticleRepository $articleRepository)
+    public function getArticle($id, ArticleRepository $articleRepository)
     {
+        $article = $articleRepository->find($id);
+        $article->tags = $article->getTags();
         return $this->json([
             'status' => 'ok',
-            'data' => $articleRepository->find($id)
+            'data' => $article
         ]);
     }
 
     /**
      * @Route("/article", name="articleEditor", methods={"POST"})
      */
-    public function articleEditor(Request $request, ArticleRepository $articleRepository)
+    public function articleEditor(Request $request, ArticleRepository $articleRepository, TagRepository $tagRepository)
     {
         $id = $request->get('id');
         $title = $request->get('title');
+        $tags = $request->get('tags');
         $entityManager = $this->getDoctrine()->getManager();
 
         if (!empty($id)) {
-            $tag = $articleRepository->find($id);
+            $article = $articleRepository->find($id);
+
         } else {
-            $tag = new Article();
+            $article = new Article();
         }
 
-        $tag->setTitle($title);
-        $entityManager->persist($tag);
+        $tagsToInsert = [];
+        foreach ($tags as $tag) {
+            if ($tag > 0) {
+                $tagsToInsert[$tag] = $tagRepository->find($tag);
+            }
+        }
+        $article->setTags(array_values($tagsToInsert));
+
+
+        $article->setTitle($title);
+        $entityManager->persist($article);
         $entityManager->flush();
 
+        $article->tags = $article->getTags();
         return $this->json([
             'status' => 'ok',
-            'id' => $tag->getId()
+            'id' => $article
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\JoinTable;
@@ -50,5 +51,18 @@ class Article
 
         return $this;
     }
-    
+
+
+    public function getTags()
+    {
+        return $this->tags->toArray();
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $tags
+     */
+    public function setTags($tags)
+    {
+        $this->tags = new ArrayCollection($tags);
+    }
 }

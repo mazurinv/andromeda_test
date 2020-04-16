@@ -26,7 +26,7 @@ class Tag
      * Many Tags have Many Articles.
      * @ManyToMany(targetEntity="Article", mappedBy="tags")
      */
-    public $articles;
+    private $articles;
 
     public function getId(): ?int
     {
