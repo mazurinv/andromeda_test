@@ -22,7 +22,7 @@ class TagController extends AbstractController
     }
 
     /**
-     * @Route("/tag/{tag}", name="getTag", methods={"GET"})
+     * @Route("/tag/{tag}", name="getTag", methods={"GET"}, requirements={"tag"="\d+"})
      */
     public function getTag($tag, TagRepository $tagRepository)
     {
@@ -37,12 +37,18 @@ class TagController extends AbstractController
      */
     public function tagEditor(Request $request, TagRepository $tagRepository)
     {
-        $id = $request->get('id');
-        $name = $request->get('name');
+        $id = $request->get('id', 0);
+        $name = $request->get('name', '');
         $entityManager = $this->getDoctrine()->getManager();
 
         if (!empty($id)) {
             $tag = $tagRepository->find($id);
+            if (empty($tag)) {
+                return $this->json([
+                    'status' => 'error',
+                    'message' => 'Tag not found'
+                ]);
+            }
         } else {
             $tag = new Tag();
         }
@@ -58,7 +64,7 @@ class TagController extends AbstractController
     }
 
     /**
-     * @Route("/tag/{tag}", name="removeTag", methods={"POST"})
+     * @Route("/tag/{tag}", name="removeTag", methods={"POST"}, requirements={"tag"="\d+"})
      */
     public function removeTag($tag, TagRepository $tagRepository)
     {

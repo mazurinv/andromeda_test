@@ -23,11 +23,17 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/article/{id}", name="getArticle", methods={"GET"})
+     * @Route("/article/{id}", name="getArticle", methods={"GET"}, requirements={"id"="\d+"})
      */
     public function getArticle($id, ArticleRepository $articleRepository)
     {
         $article = $articleRepository->find($id);
+        if (empty($article)) {
+            return $this->json([
+                'status' => 'error',
+                'message' => 'Not found'
+            ]);
+        }
         $article->tags = $article->getTags();
         return $this->json([
             'status' => 'ok',
@@ -41,9 +47,12 @@ class ArticleController extends AbstractController
     public function getArticlesByTags(Request $request, ArticleRepository $articleRepository) {
         $tags = $request->get('tags');
         $tags = array_filter($tags, function ($val) {
-            return $val > 0;
+            return $val > 0 && is_numeric($val);
         });
         $articles = $articleRepository->getArticlesByTags($tags);
+        foreach ($articles as &$article) {
+            $article->tags = $article->getTags();
+        }
         return $this->json([
             'status' => 'ok',
             'data' => $articles
@@ -55,14 +64,22 @@ class ArticleController extends AbstractController
      */
     public function articleEditor(Request $request, ArticleRepository $articleRepository, TagRepository $tagRepository)
     {
-        $id = $request->get('id');
-        $title = $request->get('title');
-        $tags = $request->get('tags');
+        $id = $request->get('id', 0);
+        $title = $request->get('title', '');
+        $tags = $request->get('tags', []);
+        $tags = array_filter($tags, function ($val) {
+            return $val > 0 && is_numeric($val);
+        });
         $entityManager = $this->getDoctrine()->getManager();
 
         if (!empty($id)) {
             $article = $articleRepository->find($id);
-
+            if (empty($article)) {
+                return $this->json([
+                    'status' => 'error',
+                    'message' => 'Article not found'
+                ]);
+            }
         } else {
             $article = new Article();
         }
@@ -88,7 +105,7 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/article/{id}", name="removeArticle", methods={"POST"})
+     * @Route("/article/{id}", name="removeArticle", methods={"POST"}, requirements={"id"="\d+"})
      */
     public function removeArticle($id, ArticleRepository $articleRepository)
     {
