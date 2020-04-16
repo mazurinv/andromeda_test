@@ -36,6 +36,21 @@ class ArticleController extends AbstractController
     }
 
     /**
+     * @Route("/articlesByTags", name="getArticlesByTags", methods={"POST"})
+     */
+    public function getArticlesByTags(Request $request, ArticleRepository $articleRepository) {
+        $tags = $request->get('tags');
+        $tags = array_filter($tags, function ($val) {
+            return $val > 0;
+        });
+        $articles = $articleRepository->getArticlesByTags($tags);
+        return $this->json([
+            'status' => 'ok',
+            'data' => $articles
+        ]);
+    }
+
+    /**
      * @Route("/article", name="articleEditor", methods={"POST"})
      */
     public function articleEditor(Request $request, ArticleRepository $articleRepository, TagRepository $tagRepository)

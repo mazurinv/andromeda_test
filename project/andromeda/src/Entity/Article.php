@@ -59,7 +59,7 @@ class Article
     }
 
     /**
-     * @param \Doctrine\Common\Collections\ArrayCollection $tags
+     * @param array $tags
      */
     public function setTags($tags)
     {

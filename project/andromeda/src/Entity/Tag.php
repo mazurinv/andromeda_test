@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping\ManyToMany;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TagRepository")
+ * @ORM\Entity
+ * @ORM\Table(name="tag")
  */
 class Tag
 {
