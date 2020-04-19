@@ -8,3 +8,5 @@ fix:
 	docker-compose exec php chmod -R 777 /var/www
 mysql:
 	docker-compose exec db mysql -usymfony -psecret symfony
+migrate:
+	docker-compose exec php andromeda/bin/console doctrine:migrations:migrate

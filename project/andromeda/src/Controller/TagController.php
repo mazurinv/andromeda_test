@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Tag;
 use App\Repository\TagRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,22 +25,21 @@ class TagController extends AbstractController
     /**
      * @Route("/tag/{tag}", name="getTag", methods={"GET"}, requirements={"tag"="\d+"})
      */
-    public function getTag($tag, TagRepository $tagRepository)
+    public function getTag(Tag $tag)
     {
         return $this->json([
             'status' => 'ok',
-            'data' => $tagRepository->find($tag)
+            'data' => $tag
         ]);
     }
 
     /**
      * @Route("/tag", name="tagEditor", methods={"POST"})
      */
-    public function tagEditor(Request $request, TagRepository $tagRepository)
+    public function tagEditor(Request $request, TagRepository $tagRepository, EntityManagerInterface $entityManager)
     {
         $id = $request->get('id', 0);
         $name = $request->get('name', '');
-        $entityManager = $this->getDoctrine()->getManager();
 
         if (!empty($id)) {
             $tag = $tagRepository->find($id);
@@ -66,11 +66,9 @@ class TagController extends AbstractController
     /**
      * @Route("/tag/{tag}", name="removeTag", methods={"POST"}, requirements={"tag"="\d+"})
      */
-    public function removeTag($tag, TagRepository $tagRepository)
+    public function removeTag(Tag $tag, EntityManagerInterface $entityManager)
     {
-        $tagToRemove = $tagRepository->find($tag);
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($tagToRemove);
+        $entityManager->remove($tag);
         $entityManager->flush();
         return $this->json([
             'status' => 'ok'

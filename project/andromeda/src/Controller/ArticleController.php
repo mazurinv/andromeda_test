@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
 use App\Repository\TagRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,17 +24,10 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/article/{id}", name="getArticle", methods={"GET"}, requirements={"id"="\d+"})
+     * @Route("/article/{article}", name="getArticle", methods={"GET"}, requirements={"article"="\d+"})
      */
-    public function getArticle($id, ArticleRepository $articleRepository)
+    public function getArticle(Article $article)
     {
-        $article = $articleRepository->find($id);
-        if (empty($article)) {
-            return $this->json([
-                'status' => 'error',
-                'message' => 'Not found'
-            ]);
-        }
         $article->tags = $article->getTags();
         return $this->json([
             'status' => 'ok',
@@ -50,7 +44,7 @@ class ArticleController extends AbstractController
             return $val > 0 && is_numeric($val);
         });
         $articles = $articleRepository->getArticlesByTags($tags);
-        foreach ($articles as &$article) {
+        foreach ($articles as $article) {
             $article->tags = $article->getTags();
         }
         return $this->json([
@@ -62,15 +56,18 @@ class ArticleController extends AbstractController
     /**
      * @Route("/article", name="articleEditor", methods={"POST"})
      */
-    public function articleEditor(Request $request, ArticleRepository $articleRepository, TagRepository $tagRepository)
-    {
+    public function articleEditor(
+        Request $request,
+        ArticleRepository $articleRepository,
+        TagRepository $tagRepository,
+        EntityManagerInterface $entityManager
+    ) {
         $id = $request->get('id', 0);
         $title = $request->get('title', '');
         $tags = $request->get('tags', []);
         $tags = array_filter($tags, function ($val) {
             return $val > 0 && is_numeric($val);
         });
-        $entityManager = $this->getDoctrine()->getManager();
 
         if (!empty($id)) {
             $article = $articleRepository->find($id);
@@ -105,13 +102,11 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/article/{id}", name="removeArticle", methods={"POST"}, requirements={"id"="\d+"})
+     * @Route("/article/{article}", name="removeArticle", methods={"POST"}, requirements={"article"="\d+"})
      */
-    public function removeArticle($id, ArticleRepository $articleRepository)
+    public function removeArticle(Article $article, EntityManagerInterface $entityManager)
     {
-        $articleToRemove = $articleRepository->find($id);
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($articleToRemove);
+        $entityManager->remove($article);
         $entityManager->flush();
         return $this->json([
             'status' => 'ok'
