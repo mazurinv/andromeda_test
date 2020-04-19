@@ -17,18 +17,23 @@ class Tag
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    public $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    public $name;
+    private $name;
 
     /**
      * Many Tags have Many Articles.
      * @ManyToMany(targetEntity="Article", mappedBy="tags")
      */
     private $articles;
+
+    public function __construct(string $name)
+    {
+        $this->setName($name);
+    }
 
     public function getId(): ?int
     {

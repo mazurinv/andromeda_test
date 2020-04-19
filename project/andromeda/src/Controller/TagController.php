@@ -50,16 +50,15 @@ class TagController extends AbstractController
                 ]);
             }
         } else {
-            $tag = new Tag();
+            $tag = new Tag($name);
         }
 
-        $tag->setName($name);
         $entityManager->persist($tag);
         $entityManager->flush();
 
         return $this->json([
             'status' => 'ok',
-            'id' => $tag->getId()
+            'data' => $tag
         ]);
     }
 

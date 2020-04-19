@@ -17,22 +17,23 @@ class Article
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    public $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    public $title;
+    private $title;
 
     /**
      * Many Articles have Many Tags.
      * @ManyToMany(targetEntity="Tag", inversedBy="articles")
      * @JoinTable(name="articles_tags")
      */
-    public $tags;
+    private $tags;
 
-    public function __construct() {
+    public function __construct(string $title) {
         $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->title = $title;
     }
 
     public function getId(): ?int

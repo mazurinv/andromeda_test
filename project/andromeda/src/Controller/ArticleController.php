@@ -9,44 +9,46 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ArticleController extends AbstractController
 {
     /**
      * @Route("/article", name="article", methods={"GET"})
      */
-    public function index(ArticleRepository $articleRepository)
+    public function index(ArticleRepository $articleRepository, NormalizerInterface $normalizer)
     {
         return $this->json([
             'status' => 'ok',
-            'data' => $articleRepository->findAll()
+            'data' => $normalizer->normalize($articleRepository->findAll())
         ]);
     }
 
     /**
      * @Route("/article/{article}", name="getArticle", methods={"GET"}, requirements={"article"="\d+"})
      */
-    public function getArticle(Article $article)
+    public function getArticle(Article $article, NormalizerInterface $normalizer)
     {
-        $article->tags = $article->getTags();
         return $this->json([
             'status' => 'ok',
-            'data' => $article
+            'data' => $normalizer->normalize($article)
         ]);
     }
 
     /**
      * @Route("/articlesByTags", name="getArticlesByTags", methods={"POST"})
      */
-    public function getArticlesByTags(Request $request, ArticleRepository $articleRepository) {
+    public function getArticlesByTags(
+        Request $request,
+        ArticleRepository $articleRepository,
+        NormalizerInterface $normalizer
+    ) {
         $tags = $request->get('tags');
         $tags = array_filter($tags, function ($val) {
             return $val > 0 && is_numeric($val);
         });
         $articles = $articleRepository->getArticlesByTags($tags);
-        foreach ($articles as $article) {
-            $article->tags = $article->getTags();
-        }
+        $articles = $normalizer->normalize($articles);
         return $this->json([
             'status' => 'ok',
             'data' => $articles
@@ -60,7 +62,8 @@ class ArticleController extends AbstractController
         Request $request,
         ArticleRepository $articleRepository,
         TagRepository $tagRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        NormalizerInterface $normalizer
     ) {
         $id = $request->get('id', 0);
         $title = $request->get('title', '');
@@ -71,6 +74,7 @@ class ArticleController extends AbstractController
 
         if (!empty($id)) {
             $article = $articleRepository->find($id);
+            $article->setTitle($title);
             if (empty($article)) {
                 return $this->json([
                     'status' => 'error',
@@ -78,7 +82,7 @@ class ArticleController extends AbstractController
                 ]);
             }
         } else {
-            $article = new Article();
+            $article = new Article($title);
         }
 
         $tagsToInsert = [];
@@ -89,15 +93,12 @@ class ArticleController extends AbstractController
         }
         $article->setTags(array_values($tagsToInsert));
 
-
-        $article->setTitle($title);
         $entityManager->persist($article);
         $entityManager->flush();
 
-        $article->tags = $article->getTags();
         return $this->json([
             'status' => 'ok',
-            'id' => $article
+            'data' => $normalizer->normalize($article)
         ]);
     }
 
